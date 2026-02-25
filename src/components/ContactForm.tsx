@@ -129,7 +129,7 @@ export default function ContactForm({
         disabled={disabled}
         whileHover={{ scale: 1.02 }}
         whileTap={{ scale: 0.98 }}
-        className="w-full px-20 py-5 mt-10 bg-white hover:bg-white/90
+        className="w-full px-5 md:px-20 py-5 mt-10 bg-white hover:bg-white/90
                text-black font-sans text-xl font-semibold 
                  disabled:opacity-50 disabled:cursor-not-allowed
                  transition-all duration-300 shadow-xl  

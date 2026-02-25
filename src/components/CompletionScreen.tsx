@@ -20,7 +20,7 @@ export default function CompletionScreen({
   return (
     <div className="w-full h-full flex flex-col lg:flex-row">
       {/* Success Info Section */}
-      <div className="flex flex-col lg:hidden items-center justify-center p-8">
+      <div className="flex flex-col lg:hidden items-center justify-center">
         <motion.div
           initial={{ opacity: 0, scale: 0.9 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -36,9 +36,8 @@ export default function CompletionScreen({
               onClick={() => setShowCalendar(true)}
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              className="lg:hidden mt-8 px-10 py-5 bg-accent hover:bg-accent-light rounded-2xl
-                       text-white font-sans text-lg font-semibold tracking-wide
-                       transition-all duration-300 shadow-2xl hover:shadow-accent/50
+              className="lg:hidden mt-8 px-5 w-full py-5 bg-white text-black font-sans text-lg font-semibold tracking-wide
+                       transition-all duration-300 shadow-2xl
                        flex items-center gap-3 mx-auto group"
             >
               <Calendar className="w-6 h-6" />
