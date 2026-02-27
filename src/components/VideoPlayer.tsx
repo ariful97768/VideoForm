@@ -101,12 +101,12 @@ export default function VideoPlayer({
           <div className="relative invisible group-hover:visible bg-white/95 backdrop-blur-sm rounded-full p-8 shadow-2xl transition-all duration-300">
             {!hasUserUnmuted || !isPlaying ? (
               <Play
-                className="w-12 h-12 text-primary-dark group-hover:text-white transition-colors duration-300"
+                className="w-12 h-12 text-primary-dark transition-colors duration-300"
                 fill="currentColor"
               />
             ) : (
               <Pause
-                className="w-12 h-12 text-primary-dark group-hover:text-white transition-colors duration-300"
+                className="w-12 h-12 text-primary-dark transition-colors duration-300"
                 fill="currentColor"
               />
             )}
