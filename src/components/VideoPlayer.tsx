@@ -46,10 +46,16 @@ export default function VideoPlayer({
       onTimeUpdateRef.current?.(video.currentTime);
     };
 
+    const handleEnded = () => {
+      setIsPlaying(false);
+    };
+
     video.addEventListener("timeupdate", handleTimeUpdate);
+    video.addEventListener("ended", handleEnded);
 
     return () => {
       video.removeEventListener("timeupdate", handleTimeUpdate);
+      video.removeEventListener("ended", handleEnded);
     };
   }, [videoUrl]);
 
@@ -135,17 +141,17 @@ export default function VideoPlayer({
                 e.stopPropagation();
                 handlePlayClick();
               }}
-              className="md:hidden pointer-events-auto bg-white/95 backdrop-blur-sm rounded-full p-8 shadow-2xl"
+              className="md:hidden pointer-events-auto bg-white/95 backdrop-blur-sm rounded-full p-5 lg:p-8 shadow-2xl"
               aria-label={isPlaying ? "Pause video" : "Play video"}
             >
               {!hasUserUnmuted || !isPlaying ? (
                 <Play
-                  className="w-12 h-12 text-primary-dark"
+                  className="w-8 h-8 text-black lg:w-12 lg:h-12"
                   fill="currentColor"
                 />
               ) : (
                 <Pause
-                  className="w-12 h-12 text-primary-dark"
+                  className="w-8 h-8 text-black lg:w-12 lg:h-12"
                   fill="currentColor"
                 />
               )}
@@ -171,12 +177,12 @@ export default function VideoPlayer({
             >
               {!hasUserUnmuted || !isPlaying ? (
                 <Play
-                  className="w-12 h-12 text-primary-dark"
+                  className="w-12 h-12 text-black"
                   fill="currentColor"
                 />
               ) : (
                 <Pause
-                  className="w-12 h-12 text-primary-dark"
+                  className="w-12 h-12 text-black"
                   fill="currentColor"
                 />
               )}

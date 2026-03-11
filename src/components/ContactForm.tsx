@@ -135,7 +135,7 @@ export default function ContactForm({
                  transition-all duration-300 shadow-xl  
                  flex items-center justify-center gap-3 group"
       >
-        <span>Prochaine étape ⟶</span>
+        <span>Prochaine étape</span>
         <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
       </motion.button>
     </motion.form>
