@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Play, Pause } from "lucide-react";
 
@@ -19,6 +19,7 @@ export default function VideoPlayer({
 }: VideoPlayerProps) {
   const videoRef = useRef<HTMLVideoElement>(null);
   const [isPlaying, setIsPlaying] = useState(false);
+  const [isHovered, setIsHovered] = useState(false);
   const hasUserUnmutedRef = useRef(hasUserUnmuted);
 
   // Keep ref in sync without re-triggering the play effect
@@ -57,14 +58,14 @@ export default function VideoPlayer({
     if (!video) return;
 
     if (!hasUserUnmuted) {
-      // First click: restart from beginning and unmute
+      // First unmute click: restart from beginning and unmute
       video.currentTime = 0;
       video.muted = false;
       video.play().catch(console.error);
       setIsPlaying(true);
       onUnmute?.();
     } else {
-      // Subsequent clicks: toggle play/pause
+      // After unmute: toggle play/pause
       if (video.paused) {
         video.play().catch(console.error);
         setIsPlaying(true);
@@ -75,8 +76,40 @@ export default function VideoPlayer({
     }
   };
 
+  // On mobile: clicking the screen while playing should pause (button acts as overlay)
+  // This is handled by handlePlayClick at the container level
+  const handleContainerClick = (e: React.MouseEvent) => {
+    // Only trigger on mobile (touch devices don't have hover)
+    // and only when the video is playing after unmute
+    if (hasUserUnmuted && isPlaying) {
+      handlePlayClick();
+    }
+  };
+
+  /**
+   * Button visibility logic:
+   *
+   * Mobile:
+   *  - Before unmute: always visible (show play button)
+   *  - After unmute & playing: invisible (hidden)
+   *  - After unmute & paused: always visible (show play button)
+   *
+   * Desktop:
+   *  - Before unmute: always visible (show play button)
+   *  - After unmute & playing: invisible (but visible on hover)
+   *  - After unmute & paused: always visible
+   */
+  const showButtonMobile = !hasUserUnmuted || !isPlaying;
+  // Desktop: visible if not unmuted yet, or paused, or hovering while playing
+  const showButtonDesktop = !hasUserUnmuted || !isPlaying || isHovered;
+
   return (
-    <div className="relative w-full h-full overflow-hidden bg-black">
+    <div
+      className="relative w-full h-full overflow-hidden bg-black"
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+      onClick={handleContainerClick}
+    >
       <video
         ref={videoRef}
         src={videoUrl}
@@ -88,46 +121,84 @@ export default function VideoPlayer({
       <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40" />
 
       {/* Play/Pause Button Overlay */}
-      <motion.button
-        onClick={handlePlayClick}
-        className="absolute group inset-0 flex items-center justify-center cursor-pointer z-1"
-        aria-label={hasUserUnmuted ? (isPlaying ? "Pause video" : "Play video") : "Play video with sound"}
-      >
-        <motion.div
-          whileHover={{ scale: 1.1 }}
-          whileTap={{ scale: 0.95 }}
-          className="relative rounded-full"
-        >
-          <div className="relative invisible group-hover:visible bg-white/95 backdrop-blur-sm rounded-full p-8 shadow-2xl transition-all duration-300">
-            {!hasUserUnmuted || !isPlaying ? (
-              <Play
-                className="w-12 h-12 text-primary-dark transition-colors duration-300"
-                fill="currentColor"
-              />
-            ) : (
-              <Pause
-                className="w-12 h-12 text-primary-dark transition-colors duration-300"
-                fill="currentColor"
-              />
-            )}
-          </div>
-        </motion.div>
-
-        {/* Hint text - only show before first unmuted play */}
+      <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
+        {/* Mobile button */}
         <AnimatePresence>
-          {!hasUserUnmuted && (
-            <motion.p
-              initial={{ opacity: 0, y: 10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 10 }}
-              transition={{ delay: 0.5 }}
-              className="absolute bottom-24 text-white/90 text-sm font-sans tracking-wide"
+          {showButtonMobile && (
+            <motion.button
+              key="mobile-btn"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePlayClick();
+              }}
+              className="md:hidden pointer-events-auto bg-white/95 backdrop-blur-sm rounded-full p-8 shadow-2xl"
+              aria-label={isPlaying ? "Pause video" : "Play video"}
             >
-              Cliquez pour écouter avec le son
-            </motion.p>
+              {!hasUserUnmuted || !isPlaying ? (
+                <Play
+                  className="w-12 h-12 text-primary-dark"
+                  fill="currentColor"
+                />
+              ) : (
+                <Pause
+                  className="w-12 h-12 text-primary-dark"
+                  fill="currentColor"
+                />
+              )}
+            </motion.button>
           )}
         </AnimatePresence>
-      </motion.button>
+
+        {/* Desktop button */}
+        <AnimatePresence>
+          {showButtonDesktop && (
+            <motion.button
+              key="desktop-btn"
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              exit={{ opacity: 0, scale: 0.8 }}
+              transition={{ duration: 0.2 }}
+              onClick={(e) => {
+                e.stopPropagation();
+                handlePlayClick();
+              }}
+              className="hidden md:flex pointer-events-auto bg-white/95 backdrop-blur-sm rounded-full p-8 shadow-2xl"
+              aria-label={isPlaying ? "Pause video" : "Play video"}
+            >
+              {!hasUserUnmuted || !isPlaying ? (
+                <Play
+                  className="w-12 h-12 text-primary-dark"
+                  fill="currentColor"
+                />
+              ) : (
+                <Pause
+                  className="w-12 h-12 text-primary-dark"
+                  fill="currentColor"
+                />
+              )}
+            </motion.button>
+          )}
+        </AnimatePresence>
+      </div>
+
+      {/* Hint text - only show before first unmuted play */}
+      <AnimatePresence>
+        {!hasUserUnmuted && (
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: 10 }}
+            transition={{ delay: 0.5 }}
+            className="absolute bottom-24 left-0 right-0 text-center text-white/90 text-sm font-sans tracking-wide z-10 pointer-events-none"
+          >
+            Cliquez pour écouter avec le son
+          </motion.p>
+        )}
+      </AnimatePresence>
     </div>
   );
 }

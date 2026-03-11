@@ -36,7 +36,6 @@ export default function FormContainer() {
   const isDesktop = useIsDesktop();
 
   const currentStep = formSteps[currentStepIndex];
-  const isLastStep = currentStepIndex === formSteps.length - 1;
 
   // Load saved progress from sessionStorage
   useEffect(() => {
@@ -52,13 +51,13 @@ export default function FormContainer() {
     }
   }, []);
 
-  // Save progress to sessionStorage
-  useEffect(() => {
-    sessionStorage.setItem(
-      STORAGE_KEY,
-      JSON.stringify({ stepIndex: currentStepIndex, data: formData }),
-    );
-  }, [currentStepIndex, formData]);
+  // // Save progress to sessionStorage
+  // useEffect(() => {
+  //   sessionStorage.setItem(
+  //     STORAGE_KEY,
+  //     JSON.stringify({ stepIndex: currentStepIndex, data: formData }),
+  //   );
+  // }, [currentStepIndex, formData]);
 
   // 5-second delay logic
   useEffect(() => {
@@ -224,7 +223,7 @@ export default function FormContainer() {
   };
 
   return (
-    <div className="w-full h-screen overflow-hidden">
+    <div className="w-full h-dvh overflow-hidden">
       {/* Desktop Layout - Split Screen */}
       <div className="hidden lg:grid lg:grid-cols-2 h-full">
         {/* Left Pane - Video */}
