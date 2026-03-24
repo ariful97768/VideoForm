@@ -34,7 +34,7 @@ export default function ContinueButton({
         // ={canContinue === 0}
         className={`${
           canContinue === 0 ? "invisible" : ""
-        } text-lg font-medium text-white/80`}
+        } text-lg font-medium hidden lg:block text-white/80`}
       >
         Interagissez en {canContinue}s
       </div>
@@ -46,7 +46,7 @@ export default function ContinueButton({
         exit={{ opacity: 0, y: 10 }}
         transition={{ delay: 0.5 }}
         className="px-20 w-full my-auto py-5 bg-white 
-               text-black font-sans text-xl font-semibold uppercase
+               text-black font-sans text-xl font-semibold uppercase max-w-xs
                disabled:bg-opacity-10 disabled:text-opacity-50 disabled:cursor-not-allowed lg:max-w-sm mx-auto
                transition-all duration-300 shadow-2xl  
                flex items-center justify-center"
