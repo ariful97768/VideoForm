@@ -1,13 +1,11 @@
 "use client";
 
 import { motion } from "framer-motion";
-import ContactForm from "./ContactForm";
 
 interface MultipleChoiceProps {
-  options: { id: string; label: string }[];
+  options: { id: string; label: string; number: string }[];
   onSelect: (value: string) => void;
   disabled?: boolean;
-  isForm?: boolean;
 }
 
 export default function MultipleChoice({
@@ -16,8 +14,8 @@ export default function MultipleChoice({
   disabled,
 }: MultipleChoiceProps) {
   return (
-    <div className="w-full h-full overflow-y-auto scrollbar-thin scrollbar-thumb-accent/50 scrollbar-track-transparent">
-      <div className="space-y-3 flex flex-col justify-center items-center h-full w-full max-w-[340px] mx-auto p-1">
+    <div className="w-full z-20 h-56 lg:h-full overflow-y-auto scrollbar-thin scrollbar-thumb-black/50 scrollbar-track-transparent">
+      <div className="space-y-5 flex flex-col items-center lg:justify-center h-full w-full max-w-[340px] mx-auto p-1">
         {options.map((option, index) => (
           <motion.button
             key={option.id}
@@ -27,11 +25,18 @@ export default function MultipleChoice({
             whileTap={{ scale: 0.98 }}
             onClick={() => onSelect(option.id)}
             disabled={disabled}
-            className="w-full max-w-[340px] text-left px-8 py-1.5 bg-white/10 backdrop-blur-sm rounded-full   transition-all duration-300 disabled:opacity-50  disabled:cursor-not-allowed shadow-lg hover:border-white border-2 border-transparent group"
+            className="w-full max-w-[340px] text-left px-3.5 py-2 bg-black/50 lg:bg-white/10 rounded-full transition-all duration-300 disabled:opacity-50  disabled:cursor-not-allowed shadow-lg hover:border-white border-2 border-transparent group"
           >
-            <span className="text-white font-sans text-lg tracking-wide transition-colors">
-              {option.label}
-            </span>
+            <div className="flex gap-4 items-center">
+              <div>
+                <div className="bg-white text-black rounded-full border-2 h-8 w-8 flex items-center justify-center text-center">
+                  {option.number}
+                </div>
+              </div>
+              <span className="text-white font-sans text-lg ">
+                {option.label}
+              </span>
+            </div>
           </motion.button>
         ))}
       </div>

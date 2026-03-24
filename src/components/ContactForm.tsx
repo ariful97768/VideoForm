@@ -78,66 +78,70 @@ export default function ContactForm({
   };
 
   return (
-    <motion.form
-      initial={{ opacity: 0, y: 20 }}
-      animate={{ opacity: 1, y: 0 }}
-      transition={{ duration: 0.5 }}
-      onSubmit={handleSubmit}
-      className="w-full h-full flex flex-col justify-center space-y-5 max-w-[640px] mx-auto"
-    >
-      <h2 className="text-xl text-white/90 font-normal! mb-8">
-        Avant la prochaine question, quels sont tes coordonnées afin que nous
-        puissions te recontacter ?
-      </h2>
-      {fields.map((field, index) => (
-        <motion.div
-          key={field.name}
-          initial={{ opacity: 0, x: -20 }}
-          animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: index * 0.1, duration: 0.4 }}
-          className="space-y-2"
-        >
-          <input
-            type={field.type}
-            id={field.name}
-            name={field.name}
-            value={formData[field.name]}
-            onChange={(e) => handleChange(field.name, e.target.value)}
-            placeholder={field.placeholder}
-            disabled={disabled}
-            className={`w-full pb-3 bg-transparent backdrop-blur-sm border-b-2 
-                     text-white placeholder-white/50 font-sans text-lg outline-none focus:outline-none ring-0
+    <div className="h-full w-full flex items-center justify-center">
+      <motion.form
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.5 }}
+        onSubmit={handleSubmit}
+        className="fixed inset-0 lg:static w-full h-full max-h-[1000px] mx-auto p-8 pt-11 flex flex-col justify-center items-center bg-[rgb(59,10,10)] z-[100] lg:z-auto"
+      >
+        <div className="space-y-7 grow">
+          <h2 className="text-xl text-white/90 font-normal! mb-8">
+            Avant la prochaine question, quels sont tes coordonnées afin que
+            nous puissions te recontacter ?
+          </h2>
+          {fields.map((field, index) => (
+            <motion.div
+              key={field.name}
+              initial={{ opacity: 0, x: -20 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ delay: index * 0.1, duration: 0.4 }}
+              className="space-y-2"
+            >
+              <input
+                type={field.type}
+                id={field.name}
+                name={field.name}
+                value={formData[field.name]}
+                onChange={(e) => handleChange(field.name, e.target.value)}
+                placeholder={field.placeholder}
+                disabled={disabled}
+                className={`w-full pb-3 bg-transparent backdrop-blur-sm border-b-2
+                     text-white placeholder-white/30 font-sans text-lg outline-none focus:outline-none ring-0
                      focus:bg-transparent transition-all duration-300
                      disabled:opacity-50 disabled:cursor-not-allowed
                      ${errors[field.name] ? "border-red-400 focus:border-red-400" : "border-white/20 focus:border-white"}`}
-          />
+              />
 
-          {errors[field.name] && (
-            <motion.p
-              initial={{ opacity: 0, y: -5 }}
-              animate={{ opacity: 1, y: 0 }}
-              className="text-red-300 text-sm ml-2"
-            >
-              {errors[field.name]}
-            </motion.p>
-          )}
-        </motion.div>
-      ))}
+              {errors[field.name] && (
+                <motion.p
+                  initial={{ opacity: 0, y: -5 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-red-300 text-sm ml-2"
+                >
+                  {errors[field.name]}
+                </motion.p>
+              )}
+            </motion.div>
+          ))}
+        </div>
 
-      <motion.button
-        type="submit"
-        disabled={disabled}
-        whileHover={{ scale: 1.02 }}
-        whileTap={{ scale: 0.98 }}
-        className="w-full px-5 md:px-20 py-5 mt-10 bg-white hover:bg-white/90
+        <motion.button
+          type="submit"
+          disabled={disabled}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          className="w-full px-5 lg:px-20 py-5 mt-10 bg-white hover:bg-white/90
                text-black font-sans text-xl font-semibold 
                  disabled:opacity-50 disabled:cursor-not-allowed
                  transition-all duration-300 shadow-xl  
                  flex items-center justify-center gap-3 group"
-      >
-        <span>Prochaine étape</span>
-        <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
-      </motion.button>
-    </motion.form>
+        >
+          <span>Prochaine étape</span>
+          <ArrowRight className="w-6 h-6 group-hover:translate-x-1 transition-transform" />
+        </motion.button>
+      </motion.form>
+    </div>
   );
 }

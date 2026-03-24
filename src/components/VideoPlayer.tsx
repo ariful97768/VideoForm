@@ -85,11 +85,9 @@ export default function VideoPlayer({
   // On mobile: clicking the screen while playing should pause (button acts as overlay)
   // This is handled by handlePlayClick at the container level
   const handleContainerClick = (e: React.MouseEvent) => {
-    // Only trigger on mobile (touch devices don't have hover)
-    // and only when the video is playing after unmute
-    if (hasUserUnmuted && isPlaying) {
-      handlePlayClick();
-    }
+    // if (hasUserUnmuted && isPlaying) {
+    handlePlayClick();
+    // }
   };
 
   /**
@@ -124,7 +122,7 @@ export default function VideoPlayer({
       />
 
       {/* Dark overlay for better text visibility */}
-      <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40" />
+      {/* <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-black/40" /> */}
 
       {/* Play/Pause Button Overlay */}
       <div className="absolute inset-0 flex items-center justify-center z-10 pointer-events-none">
@@ -141,7 +139,7 @@ export default function VideoPlayer({
                 e.stopPropagation();
                 handlePlayClick();
               }}
-              className="md:hidden pointer-events-auto bg-white/95 backdrop-blur-sm rounded-full p-5 lg:p-8 shadow-2xl"
+              className="lg:hidden pointer-events-auto bg-white/95 backdrop-blur-sm rounded-full p-5 lg:p-8 shadow-2xl"
               aria-label={isPlaying ? "Pause video" : "Play video"}
             >
               {!hasUserUnmuted || !isPlaying ? (
@@ -172,39 +170,18 @@ export default function VideoPlayer({
                 e.stopPropagation();
                 handlePlayClick();
               }}
-              className="hidden md:flex pointer-events-auto bg-white/95 backdrop-blur-sm rounded-full p-8 shadow-2xl"
+              className="hidden lg:flex pointer-events-auto bg-white/95 backdrop-blur-sm rounded-full p-8 shadow-2xl"
               aria-label={isPlaying ? "Pause video" : "Play video"}
             >
               {!hasUserUnmuted || !isPlaying ? (
-                <Play
-                  className="w-12 h-12 text-black"
-                  fill="currentColor"
-                />
+                <Play className="w-12 h-12 text-black" fill="currentColor" />
               ) : (
-                <Pause
-                  className="w-12 h-12 text-black"
-                  fill="currentColor"
-                />
+                <Pause className="w-12 h-12 text-black" fill="currentColor" />
               )}
             </motion.button>
           )}
         </AnimatePresence>
       </div>
-
-      {/* Hint text - only show before first unmuted play */}
-      <AnimatePresence>
-        {!hasUserUnmuted && (
-          <motion.p
-            initial={{ opacity: 0, y: 10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 10 }}
-            transition={{ delay: 0.5 }}
-            className="absolute bottom-24 left-0 right-0 text-center text-white/90 text-sm font-sans tracking-wide z-10 pointer-events-none"
-          >
-            Cliquez pour écouter avec le son
-          </motion.p>
-        )}
-      </AnimatePresence>
     </div>
   );
 }

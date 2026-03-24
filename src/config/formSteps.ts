@@ -16,12 +16,12 @@ export const formSteps: FormStep[] = [
     question: "Dans quelle région vis-tu ? 🌏",
     fieldName: "region",
     options: [
-      { id: "europe", label: "A: Europe" },
-      { id: "amerique", label: "B: AMERIQUE DU NORD/SUD" },
-      { id: "dom-tom", label: "C: DOM-TOM" },
-      { id: "asie", label: "D: Asie" },
-      { id: "afrique", label: "E: AFRIQUE" },
-      { id: "oceanie", label: "F: Océanie" },
+      { id: "europe", number: "A", label: "Europe" },
+      { id: "amerique", number: "B", label: "AMERIQUE DU NORD/SUD" },
+      { id: "dom-tom", number: "C", label: "DOM-TOM" },
+      { id: "asie", number: "D", label: "Asie" },
+      { id: "afrique", number: "E", label: "AFRIQUE" },
+      { id: "oceanie", number: "F", label: "Océanie" },
     ],
   },
   {
@@ -60,10 +60,10 @@ export const formSteps: FormStep[] = [
     question: "Sur quels réseaux te trouves-tu actuellement?",
     fieldName: "social-media",
     options: [
-      { id: "instagram", label: "A: INSTAGRAM" },
-      { id: "tik-tok", label: "B: TIKTOK" },
-      { id: "les-deux", label: "C: LES DEUX" },
-      { id: "aucun", label: "D: AUCUN" },
+      { id: "instagram", number: "A", label: "INSTAGRAM" },
+      { id: "tik-tok", number: "B", label: "TIKTOK" },
+      { id: "les-deux", number: "C", label: "LES DEUX" },
+      { id: "aucun", number: "D", label: "AUCUN" },
     ],
   },
   {
@@ -91,8 +91,8 @@ export const formSteps: FormStep[] = [
     question: "Depuis combien de temps ?",
     fieldName: "time",
     options: [
-      { id: "moins-de-1-an", label: "A: Moins de 1 an" },
-      { id: "plus-de-1-an", label: "B: Plus de 1 an" },
+      { id: "moins-de-1-an", number: "A", label: "Moins de 1 an" },
+      { id: "plus-de-1-an", number: "B", label: "Plus de 1 an" },
     ],
   },
   {
@@ -111,10 +111,10 @@ export const formSteps: FormStep[] = [
     question: "TON CHIFFRE D'AFFAIRE ?",
     fieldName: "money",
     options: [
-      { id: "€0-€5k", label: "A: €0 - €5K" },
-      { id: "€5k-€10k", label: "B: €5K - €10K" },
-      { id: "€10k-€50k", label: "B: €10K - €50K" },
-      { id: "€50k+", label: "B: €50K+" },
+      { id: "€0-€5k", number: "A", label: "€0 - €5K" },
+      { id: "€5k-€10k", number: "B", label: "€5K - €10K" },
+      { id: "€10k-€50k", number: "C", label: "€10K - €50K" },
+      { id: "€50k+", number: "D", label: "€50K+" },
     ],
   },
   {
@@ -124,9 +124,9 @@ export const formSteps: FormStep[] = [
     question: "Quel serait ton budget ?",
     fieldName: "budget",
     options: [
-      { id: "1000-1500€", label: "A: 1000 - 1500€" },
-      { id: "1500-3000€", label: "B: 1500 - 3000€" },
-      { id: "plus-de-3000€", label: "B: Plus de 3000€" },
+      { id: "1000-1500€", number: "A", label: "1000 - 1500€" },
+      { id: "1500-3000€", number: "B", label: "1500 - 3000€" },
+      { id: "plus-de-3000€", number: "C", label: "Plus de 3000€" },
     ],
   },
   {
@@ -136,9 +136,9 @@ export const formSteps: FormStep[] = [
     question: "Appuie ensuite sur ok",
     fieldName: "budget",
     options: [
-      { id: "Dès-que-possible", label: "A: Dès que possible" },
-      { id: "d’ici-1-à-2-semaines", label: "B: D’ici 1 à 2 semaines" },
-      { id: "pas-encore-prêt.e-à-commencer", label: "B: Pas encore prêt.e à commencer" },
+      { id: "Dès-que-possible", number: "A", label: "Dès que possible" },
+      { id: "d’ici-1-à-2-semaines", number: "B", label: "D’ici 1 à 2 semaines" },
+      { id: "pas-encore-prêt.e-à-commencer", number: "C", label: "Pas encore prêt.e à commencer" },
     ],
   },
   {

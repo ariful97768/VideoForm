@@ -30,7 +30,7 @@ export default function FormContainer() {
   const [currentStepIndex, setCurrentStepIndex] = useState(0);
   const [formData, setFormData] = useState<FormData>({});
   const [videoTime, setVideoTime] = useState(0);
-  const [canContinue, setCanContinue] = useState(false);
+
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [hasUserUnmuted, setHasUserUnmuted] = useState(false);
   const isDesktop = useIsDesktop();
@@ -58,18 +58,6 @@ export default function FormContainer() {
   //     JSON.stringify({ stepIndex: currentStepIndex, data: formData }),
   //   );
   // }, [currentStepIndex, formData]);
-
-  // 5-second delay logic
-  useEffect(() => {
-    setCanContinue(false);
-    setVideoTime(0);
-
-    const timer = setTimeout(() => {
-      setCanContinue(true);
-    }, 1000);
-
-    return () => clearTimeout(timer);
-  }, [currentStepIndex]);
 
   // Submit data to backend
   const submitToBackend = async (finalData: FormData) => {
@@ -169,8 +157,10 @@ export default function FormContainer() {
         return (
           <div className="flex items-center justify-center h-full">
             <ContinueButton
-              onClick={handleNextStep}
-              visible={canContinue}
+              onClick={() => {
+                handleNextStep();
+                setHasUserUnmuted(true);
+              }}
               disabled={isSubmitting}
             />
           </div>
@@ -183,7 +173,7 @@ export default function FormContainer() {
             onSelect={(value) =>
               handleMultipleChoiceSelect(currentStep.fieldName, value)
             }
-            disabled={!canContinue || isSubmitting}
+            disabled={isSubmitting}
           />
         );
 
@@ -195,7 +185,7 @@ export default function FormContainer() {
             onSubmit={(value) =>
               handleTextInputSubmit(currentStep.fieldName, value)
             }
-            disabled={!canContinue || isSubmitting}
+            disabled={isSubmitting}
           />
         );
 
@@ -204,7 +194,7 @@ export default function FormContainer() {
           <ContactForm
             fields={currentStep.fields}
             onSubmit={handleFormSubmit}
-            disabled={!canContinue || isSubmitting}
+            disabled={isSubmitting}
           />
         );
 
@@ -225,10 +215,60 @@ export default function FormContainer() {
   return (
     <div className="w-full h-dvh overflow-hidden">
       {/* Desktop Layout - Split Screen */}
-      <div className="hidden lg:grid lg:grid-cols-2 h-full">
-        {/* Left Pane - Video */}
-        <div className="relative">
-          {isDesktop && (
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentStep.videoUrl}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          transition={{ duration: 0.4 }}
+          className="hidden lg:grid lg:grid-cols-2 h-full"
+        >
+          {/* Left Pane - Video */}
+          <div className="relative">
+            {isDesktop && (
+              <VideoPlayer
+                videoUrl={currentStep.videoUrl}
+                onTimeUpdate={setVideoTime}
+                hasUserUnmuted={hasUserUnmuted}
+                onUnmute={() => setHasUserUnmuted(true)}
+              />
+            )}
+
+            {/* Question Overlay */}
+            {currentStep.question && (
+              <motion.div
+                initial={{ opacity: 0, x: -20 }}
+                animate={{ opacity: 1, x: 0 }}
+                transition={{ delay: 0.5, duration: 0.6 }}
+                className="absolute top-12 left-12 max-w-xl"
+              >
+                <h2 className="text-4xl lg:text-5xl font-display font-bold text-white leading-tight drop-shadow-2xl">
+                  {currentStep.question}
+                </h2>
+              </motion.div>
+            )}
+          </div>
+          {/* Right Pane - Interactions */}
+          <div className="bg-[rgb(59,10,10)] flex flex-col items-center justify-center p-12 relative">
+            <div className="w-full h-full max-w-2xl">
+              <div className="h-full">{renderStepContent()}</div>
+            </div>
+          </div>
+        </motion.div>
+      </AnimatePresence>
+
+      {/* Mobile Layout - Full Screen with Overlays */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={currentStep.videoUrl}
+          initial={{ opacity: 0, y: 50 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -50 }}
+          transition={{ duration: 0.4 }}
+          className="lg:hidden relative border-2 h-full"
+        >
+          {isDesktop === false && (
             <VideoPlayer
               videoUrl={currentStep.videoUrl}
               onTimeUpdate={setVideoTime}
@@ -237,80 +277,26 @@ export default function FormContainer() {
             />
           )}
 
-          {/* Question Overlay */}
+          {/* Question Overlay - Top */}
           {currentStep.question && (
             <motion.div
-              initial={{ opacity: 0, x: -20 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: -20 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.6 }}
-              className="absolute top-12 left-12 max-w-xl"
+              className="absolute top-0 left-0 right-0 p-6 bg-gradient-to-b from-black/80 to-transparent"
             >
-              <h2 className="text-4xl lg:text-5xl font-display font-bold text-white leading-tight drop-shadow-2xl">
+              <h2 className="text-2xl sm:text-3xl font-display font-bold text-white leading-tight">
                 {currentStep.question}
               </h2>
             </motion.div>
           )}
-        </div>
 
-        {/* Right Pane - Interactions */}
-        <div className="bg-[rgb(59,10,10)] flex flex-col items-center justify-center p-12">
-          <div className="w-full h-full max-w-2xl">
-            <AnimatePresence mode="wait">
-              <motion.div
-              className="h-full"
-                key={currentStepIndex}
-                initial={{ opacity: 0, y: 50 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -50 }}
-                transition={{ duration: 0.4 }}
-              >
-                {renderStepContent()}
-              </motion.div>
-            </AnimatePresence>
+          {/* Interaction Overlay - Bottom */}
+          <div className="absolute bottom-0 left-0 right-0 p-6">
+            <div>{renderStepContent()}</div>
           </div>
-        </div>
-      </div>
-
-      {/* Mobile Layout - Full Screen with Overlays */}
-      <div className="lg:hidden relative h-full">
-        {isDesktop === false && (
-          <VideoPlayer
-            videoUrl={currentStep.videoUrl}
-            onTimeUpdate={setVideoTime}
-            hasUserUnmuted={hasUserUnmuted}
-            onUnmute={() => setHasUserUnmuted(true)}
-          />
-        )}
-
-        {/* Question Overlay - Top */}
-        {currentStep.question && (
-          <motion.div
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ delay: 0.5, duration: 0.6 }}
-            className="absolute top-0 left-0 right-0 p-6 bg-gradient-to-b from-black/80 to-transparent"
-          >
-            <h2 className="text-2xl sm:text-3xl font-display font-bold text-white leading-tight">
-              {currentStep.question}
-            </h2>
-          </motion.div>
-        )}
-
-        {/* Interaction Overlay - Bottom */}
-        <div className="absolute bottom-0 left-0 right-0 p-6 bg-gradient-to-t from-black/90 via-black/80 to-transparent">
-          <AnimatePresence mode="wait">
-            <motion.div
-              key={currentStepIndex}
-              initial={{ opacity: 0, y: 50 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: 50 }}
-              transition={{ duration: 0.4 }}
-            >
-              {renderStepContent()}
-            </motion.div>
-          </AnimatePresence>
-        </div>
-      </div>
+        </motion.div>
+      </AnimatePresence>
     </div>
   );
 }

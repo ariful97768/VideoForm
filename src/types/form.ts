@@ -22,6 +22,7 @@ export interface MultipleChoiceStep extends BaseStep {
   options: {
     id: string;
     label: string;
+    number: string;
   }[];
   fieldName: string;
 }
