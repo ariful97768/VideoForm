@@ -266,7 +266,7 @@ export default function FormContainer() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -50 }}
           transition={{ duration: 0.4 }}
-          className="lg:hidden relative border-2 h-full"
+          className="lg:hidden relative h-full"
         >
           {isDesktop === false && (
             <VideoPlayer
